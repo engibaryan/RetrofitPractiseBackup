@@ -19,6 +19,7 @@ class ProductAdapter: ListAdapter<Product, ProductAdapter.Holder>(Comparator()) 
         fun bind(product: Product) = with(binding) {
             title.text = product.title
             description.text = product.description
+            price.text = product.price.toString()
         }
     }
 
