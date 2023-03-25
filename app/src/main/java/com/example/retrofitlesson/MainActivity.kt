@@ -3,8 +3,6 @@ package com.example.retrofitlesson
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp_khachik_yengibaryan.adapter.ProductAdapter
@@ -29,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         adapter = ProductAdapter()
-        var recyclerView = findViewById<RecyclerView>(R.id.rcVieww)
+        val recyclerView = findViewById<RecyclerView>(R.id.rcVieww)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -43,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://dummyjson.com").client(client)
+            .baseUrl("https://newsapi.org").client(client)
             .addConverterFactory(GsonConverterFactory.create()).build()
         val productApi = retrofit.create(ProductApi::class.java)
 
@@ -52,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             val list = productApi.getAllProducts()
             runOnUiThread {
                 binding.apply {
-                    adapter.submitList(list.products)
+                    adapter.submitList(list.articles)
                 }
 
             }
