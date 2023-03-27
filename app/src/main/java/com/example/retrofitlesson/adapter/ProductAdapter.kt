@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofitlesson.R
 import com.example.retrofitlesson.databinding.ListItemBinding
 import com.example.retrofitlesson.retrofit.ArticleX
+import com.squareup.picasso.Picasso
 
 class ProductAdapter: ListAdapter<ArticleX, ProductAdapter.Holder>(Comparator()) {
 
@@ -16,9 +17,11 @@ class ProductAdapter: ListAdapter<ArticleX, ProductAdapter.Holder>(Comparator())
         private val binding = ListItemBinding.bind(view)
 
         fun bind(product: ArticleX) = with(binding) {
+            author.text = product.author
             title.text = product.title
             description.text = product.publishedAt
-//            price.text = product.content
+            Picasso.get().load(product.urlToImage).into(image)
+
         }
     }
 
