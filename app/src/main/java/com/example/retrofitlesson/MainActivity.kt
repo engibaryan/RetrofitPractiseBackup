@@ -5,7 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsapp_khachik_yengibaryan.adapter.ProductAdapter
+import com.example.retrofitlesson.adapter.ProductAdapter
+
 import com.example.retrofitlesson.databinding.ActivityMainBinding
 import com.example.retrofitlesson.retrofit.ProductApi
 import kotlinx.coroutines.CoroutineScope

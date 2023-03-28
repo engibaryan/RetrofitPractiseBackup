@@ -1,5 +1,4 @@
-package com.example.newsapp_khachik_yengibaryan.adapter
-
+package com.example.retrofitlesson.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofitlesson.R
 import com.example.retrofitlesson.databinding.ListItemBinding
 import com.example.retrofitlesson.retrofit.ArticleX
-import com.squareup.picasso.Picasso
 
 class ProductAdapter: ListAdapter<ArticleX, ProductAdapter.Holder>(Comparator()) {
 
@@ -19,9 +17,7 @@ class ProductAdapter: ListAdapter<ArticleX, ProductAdapter.Holder>(Comparator())
         fun bind(product: ArticleX) = with(binding) {
             author.text = product.title
             title.text = product.firstName
-//            description.text = product.publishedAt
-//            Picasso.get().load(product.urlToImage).into(image)
-
+            description.text = product.nat
         }
     }
 
