@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://newsapi.org").client(client)
+            .baseUrl("https://randomuser.me").client(client)
             .addConverterFactory(GsonConverterFactory.create()).build()
         val productApi = retrofit.create(ProductApi::class.java)
 
@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity() {
                 binding.apply {
                     adapter.submitList(list.articles)
                 }
-
             }
         }
     }

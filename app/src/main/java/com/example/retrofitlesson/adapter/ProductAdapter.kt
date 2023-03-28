@@ -17,17 +17,17 @@ class ProductAdapter: ListAdapter<ArticleX, ProductAdapter.Holder>(Comparator())
         private val binding = ListItemBinding.bind(view)
 
         fun bind(product: ArticleX) = with(binding) {
-            author.text = product.author
-            title.text = product.title
-            description.text = product.publishedAt
-            Picasso.get().load(product.urlToImage).into(image)
+            author.text = product.title
+            title.text = product.firstName
+//            description.text = product.publishedAt
+//            Picasso.get().load(product.urlToImage).into(image)
 
         }
     }
 
     class Comparator: DiffUtil.ItemCallback<ArticleX>() {
         override fun areItemsTheSame(oldItem: ArticleX, newItem: ArticleX): Boolean {
-            return oldItem.description == newItem.author
+            return oldItem.title == newItem.title
         }
 
         override fun areContentsTheSame(oldItem: ArticleX, newItem: ArticleX): Boolean {
