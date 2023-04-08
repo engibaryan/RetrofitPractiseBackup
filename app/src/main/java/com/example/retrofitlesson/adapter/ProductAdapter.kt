@@ -1,4 +1,4 @@
-package com.example.newsapp_khachik_yengibaryan.adapter
+package com.example.retrofitlesson.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofitlesson.R
 import com.example.retrofitlesson.databinding.ListItemBinding
 import com.example.retrofitlesson.retrofit.ArticleX
+import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 
 class ProductAdapter: ListAdapter<ArticleX, ProductAdapter.Holder>(Comparator()) {
 
@@ -16,9 +19,10 @@ class ProductAdapter: ListAdapter<ArticleX, ProductAdapter.Holder>(Comparator())
         private val binding = ListItemBinding.bind(view)
 
         fun bind(product: ArticleX) = with(binding) {
+            var date = SimpleDateFormat("MMMM d, Y").format(product.publishedAt)
             title.text = product.title
-            description.text = product.publishedAt
-//            price.text = product.content
+            description.text = date
+            Picasso.get().load(product.urlToImage).into(image);
         }
     }
 
