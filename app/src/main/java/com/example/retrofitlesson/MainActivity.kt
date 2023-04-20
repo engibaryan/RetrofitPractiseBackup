@@ -6,19 +6,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofitlesson.adapter.ProductAdapter
 import com.example.retrofitlesson.databinding.ActivityMainBinding
-import com.example.retrofitlesson.retrofit.ProductApi
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import androidx.activity.viewModels
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : AppCompatActivity() {
+    val viewModel by viewModels<MainViewModel>()
     private lateinit var adapter: ProductAdapter
     lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,24 +32,24 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
+//        val interceptor = HttpLoggingInterceptor()
+//        interceptor.level = HttpLoggingInterceptor.Level.BODY
+//
+//        val client = OkHttpClient.Builder()
+//            .addInterceptor(interceptor)
+//            .build()
 
-        val client = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://newsapi.org").client(client)
-            .addConverterFactory(GsonConverterFactory.create()).build()
-        val productApi = retrofit.create(ProductApi::class.java)
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl("https://newsapi.org").client(client)
+//            .addConverterFactory(GsonConverterFactory.create()).build()
+      //  val productApi = retrofit.create(ProductApi::class.java)
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            val list = productApi.getAllProducts()
+            val list = viewModel.getPosts()
             runOnUiThread {
                 binding.apply {
-                    adapter.submitList(list.articles)
+                    adapter.submitList(list)
                 }
 
             }
