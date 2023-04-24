@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">RetrofitLesson</string>
+    <string name="api_key">bdc08d007fdf45caa0634c195fef7270</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
