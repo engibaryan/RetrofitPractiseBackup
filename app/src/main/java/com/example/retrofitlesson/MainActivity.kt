@@ -16,7 +16,7 @@ import com.example.retrofitlesson.retrofit.RetrofitHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import java.text.SimpleDateFormat
 
 
 class MainActivity : AppCompatActivity(), Listener {
@@ -56,7 +56,16 @@ class MainActivity : AppCompatActivity(), Listener {
 
     override fun onClick(article: ArticleX) {
         val intent = Intent(this, DetailsActivity::class.java)
-        intent.putExtra(article.title,article.description)
+
+        var date = SimpleDateFormat("MMMM d, Y").format(article.publishedAt)
+
+        intent.putExtra("title",article.title)
+        intent.putExtra("img", article.urlToImage)
+        intent.putExtra("author", article.author)
+        intent.putExtra("time", date)
+        intent.putExtra("source", article.source.name)
+        intent.putExtra("description",article.description)
+        intent.putExtra("content",article.content)
         startActivity(intent)
     }
 }

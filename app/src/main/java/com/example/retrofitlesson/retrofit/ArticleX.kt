@@ -21,4 +21,4 @@ data class ArticleX(
 //    val title: String,
 //    val url: String,
 //    val urlToImage: String
-)
+) : java.io.Serializable
