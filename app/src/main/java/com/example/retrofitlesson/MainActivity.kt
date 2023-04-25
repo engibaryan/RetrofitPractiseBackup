@@ -4,6 +4,9 @@ import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +22,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 
-class MainActivity : AppCompatActivity(), Listener {
+class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
     private lateinit var adapter: ProductAdapter
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,16 @@ class MainActivity : AppCompatActivity(), Listener {
         val progressDialog = ProgressDialog(this@MainActivity)
         progressDialog.setMessage("Application is loading, please wait")
         progressDialog.show()
+
+        var b1 = findViewById<Button>(R.id.btn_1)
+        var b2 = findViewById<Button>(R.id.btn_2)
+        var b3 = findViewById<Button>(R.id.btn_3)
+        var b4 = findViewById<Button>(R.id.btn_4)
+
+        b1.setOnClickListener(this)
+        b2.setOnClickListener(this)
+        b3.setOnClickListener(this)
+        b4.setOnClickListener(this)
 
         adapter = ProductAdapter(this)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_main)
@@ -54,7 +67,7 @@ class MainActivity : AppCompatActivity(), Listener {
 
 
 
-    override fun onClick(article: ArticleX) {
+    override fun onClickArticles(article: ArticleX) {
         val intent = Intent(this, DetailsActivity::class.java)
 
         var date = SimpleDateFormat("MMMM d, Y").format(article.publishedAt)
@@ -67,5 +80,27 @@ class MainActivity : AppCompatActivity(), Listener {
         intent.putExtra("description",article.description)
         intent.putExtra("content",article.content)
         startActivity(intent)
+    }
+
+    override fun onClick(v: View) {
+        val progressDialog = ProgressDialog(this@MainActivity)
+        progressDialog.setMessage("Application is loading, please wait")
+        progressDialog.show()
+
+        var button: Button = v as Button
+        var category: String = button.text.toString()
+        val productApi = RetrofitHelper.getInstance().create(ProductApi::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val list = productApi.getCategory(category)
+            runOnUiThread {
+                binding.apply {
+                    adapter.submitList(list.articles)
+                    progressDialog.dismiss()
+                }
+            }
+        }
+
+
     }
 }

@@ -28,7 +28,7 @@ class ProductAdapter(val listener: Listener): ListAdapter<ArticleX, ProductAdapt
             textSource3.text = date
            Picasso.get().load(product.urlToImage).into(imgHeadline);
             itemView.setOnClickListener{
-                listener.onClick(product)
+                listener.onClickArticles(product)
             }
         }
     }
