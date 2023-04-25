@@ -4,12 +4,15 @@ import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.retrofitlesson.adapter.ProductAdapter
 import com.example.retrofitlesson.adapter.Listener
 import com.example.retrofitlesson.databinding.ActivityMainBinding
@@ -19,20 +22,44 @@ import com.example.retrofitlesson.retrofit.RetrofitHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.http.Query
 import java.text.SimpleDateFormat
 
 
 class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
     private lateinit var adapter: ProductAdapter
     lateinit var binding: ActivityMainBinding
+    var offlineData = ArrayList<ArticleX>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+
         setContentView(R.layout.activity_main)
+
         title = "NewsApp"
+
         val progressDialog = ProgressDialog(this@MainActivity)
         progressDialog.setMessage("Application is loading, please wait")
         progressDialog.show()
+
+        var swipe = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        swipe.setOnRefreshListener {
+            val productApi = RetrofitHelper.getInstance().create(ProductApi::class.java)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val list = productApi.getAllProducts()
+                runOnUiThread {
+                    binding.apply {
+                        adapter.submitList(list.articles)
+                        progressDialog.dismiss()
+                    }
+                }
+            }
+            swipe.isRefreshing = false
+        }
+
+
 
         var b1 = findViewById<Button>(R.id.btn_1)
         var b2 = findViewById<Button>(R.id.btn_2)
@@ -44,15 +71,13 @@ class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
         b3.setOnClickListener(this)
         b4.setOnClickListener(this)
 
+
         adapter = ProductAdapter(this)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_main)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-
-
         val productApi = RetrofitHelper.getInstance().create(ProductApi::class.java)
-
 
         CoroutineScope(Dispatchers.IO).launch {
             val list = productApi.getAllProducts()
