@@ -4,12 +4,8 @@ import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
-import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.SearchView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,15 +18,13 @@ import com.example.retrofitlesson.retrofit.RetrofitHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.http.Query
 import java.text.SimpleDateFormat
 
 
 class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
     private lateinit var adapter: ProductAdapter
     lateinit var binding: ActivityMainBinding
-    var offlineData = ArrayList<ArticleX>()
-
+    lateinit var  searchView: androidx.appcompat.widget.SearchView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -43,7 +37,9 @@ class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
         progressDialog.setMessage("Application is loading, please wait")
         progressDialog.show()
 
-        var swipe = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        searchView = findViewById(R.id.search_view)
+
+        val swipe = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
         swipe.setOnRefreshListener {
             val productApi = RetrofitHelper.getInstance().create(ProductApi::class.java)
 
@@ -61,10 +57,10 @@ class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
 
 
 
-        var b1 = findViewById<Button>(R.id.btn_1)
-        var b2 = findViewById<Button>(R.id.btn_2)
-        var b3 = findViewById<Button>(R.id.btn_3)
-        var b4 = findViewById<Button>(R.id.btn_4)
+        val b1 = findViewById<Button>(R.id.btn_1)
+        val b2 = findViewById<Button>(R.id.btn_2)
+        val b3 = findViewById<Button>(R.id.btn_3)
+        val b4 = findViewById<Button>(R.id.btn_4)
 
         b1.setOnClickListener(this)
         b2.setOnClickListener(this)
@@ -88,6 +84,26 @@ class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
                 }
             }
         }
+       searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
+
+            override fun onQueryTextSubmit(text: String?): Boolean {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val list = text?.let { productApi.getProductsByName(it) }
+                    runOnUiThread {
+                        binding.apply {
+                            adapter.submitList(list?.articles)
+                            progressDialog.dismiss()
+                        }
+                    }
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return false
+            }
+
+        })
     }
 
 
@@ -112,8 +128,8 @@ class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
         progressDialog.setMessage("Application is loading, please wait")
         progressDialog.show()
 
-        var button: Button = v as Button
-        var category: String = button.text.toString()
+        val button: Button = v as Button
+        val category: String = button.text.toString()
         val productApi = RetrofitHelper.getInstance().create(ProductApi::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
