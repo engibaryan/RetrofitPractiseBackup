@@ -9,7 +9,6 @@ class DetailsActivity : AppCompatActivity() {
     lateinit var binding: ActivityDetailsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_details)
 
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         val view = binding.root

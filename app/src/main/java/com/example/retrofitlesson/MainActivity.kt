@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat
 
 
 class MainActivity : AppCompatActivity(), Listener, View.OnClickListener {
-    private lateinit var adapter: ProductAdapter
+    lateinit var adapter: ProductAdapter
     lateinit var binding: ActivityMainBinding
     lateinit var  searchView: androidx.appcompat.widget.SearchView
     override fun onCreate(savedInstanceState: Bundle?) {
